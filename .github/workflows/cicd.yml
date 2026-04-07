@@ -1,0 +1,30 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            # - name: Set up Python
+            #   uses: actions/setup-python@v2
+            #   with:
+            #       python-version: '3.x'
+
+            - name: build image
+              run: |
+                  docker build -t pythonapp:latest .
+                  docker tag pythonapp:latest pythonapp:dev
+                  docker run -d -p 8060:5000 pythonapp:dev
+
+            
+            
+    # deploy:
