@@ -27,4 +27,18 @@ jobs:
 
             
             
-    # deploy:
+    deploy-ECR: 
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: ecr credentials
+              uses: aws-actions/configure-aws-credentials@v1
+              with:  
+                role-to-assume: arn:aws:iam::$${secrets.AWS_ACCOUNT_ID}:role/$${secrets.ECR_ACCESS_ROLE}
+                aws-region: $${secrets.AWS_REGION}
+
+            - name: Push to ECR
+              run: |
+                    docker push $${secrets.AWS_ACCOUNT_ID}.dkr.ecr.$${secrets.AWS_REGION}.amazonaws.com/pythonapp:latest
+
+               
